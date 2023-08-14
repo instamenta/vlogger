@@ -1,0 +1,18 @@
+{
+  "name": "vlogger",
+  "version": "1.0.0",
+  "description": "logger with valiation and throwing functionality",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "logger",
+    "thrower",
+    "error",
+    "handler",
+    "validator"
+  ],
+  "author": "instamenta",
+  "license": "MIT"
+}
