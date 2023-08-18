@@ -2,222 +2,288 @@
 
 /**
  * Vlogger class Used for console Logging, Throwing errors & Validation
- * - level - give if you want to use INFO and DEBUG + verbose errors returned from VThrow, Throw and Error
+ * * level - give if you want to use INFO and DEBUG + verbose errors returned from VThrow, Throw and Error
  *
  * @class VLogger
  *
  * @property {boolean} level - The logging level. Set to true to enable logging, false to disable.
- *
  * @property {function} INFO - Log an informational message.
  * @property {function} THROW - Log an error message and throw an Error.
  * @property {function} ERROR - Log an error message.
  * @property {function} VTHROW - Log an error message and throw an Error if data is invalid.
  * @property {function} DEBUG - Log a debug message.
  */
-export default class VLogger {
+// export default class VLogger {
+//
+//    /** @type {boolean}*/
+//    level: boolean = true;
+//
+//    /**
+//     * @constructor VLogger
+//     *
+//     * @param {boolean} level - The logging level. Set to true to enable logging, false to disable.
+//     */
+//    constructor(level: boolean = true) {
+//       this.level = level;
+//    }
+//
+//    /**
+//     * Log an informational message.
+//     *
+//     * @param {*} $_DATA - Data to be logged.
+//     * @param {string} $__MESSAGE - Informational message to be logged.
+//     * @param {string|null} __DIR__ - Optional parameter to specify the location.
+//     *
+//     * @public
+//     * @method
+//     */
+//    public INFO(
+//       $_DATA: any,
+//       $__MESSAGE: string,
+//       __DIR__: string | null = null
+//    ): void {
+//       if (this.level) {
+//          console.log(`${
+//             __DIR__
+//                ? `[ INFO : .${__DIR__}() ] : `
+//                : "[ INFO ] : "
+//          }~ "${$__MESSAGE}" ~ : ${typeof $_DATA} --> `, $_DATA);
+//       }
+//    }
+//
+//    /**
+//     * Log an error message and throw an Error.
+//     *
+//     * @param {Error} $__ERROR - The error object to throw.
+//     * @param {string} $__MESSAGE - The error message to log.
+//     * @param {string|null} __DIR__ - Optional parameter to specify the location.
+//     *
+//     * @throws {Error} - Always throws the provided error.
+//     *
+//     * @public
+//     * @method
+//     */
+//    public THROW(
+//       $__ERROR: Error | any,
+//       $__MESSAGE: string,
+//       __DIR__: string | null = null
+//    ): void {
+//       console.error(
+//          `${__DIR__
+//             ? `[ ERROR : .${__DIR__}() ] : `
+//             : "[ ERROR ] : "
+//          }~ "${$__MESSAGE}" ~ : `,
+//          this.level ? $__ERROR.message : $__ERROR
+//       );
+//       throw $__ERROR;
+//    }
+//
+//    /**
+//     * Log an error message.
+//     *
+//     * @param {Error} $__ERROR - The error object to log.
+//     * @param {string} $__MESSAGE - The error message to log.
+//     * @param {string|null} __DIR__ - Optional parameter to specify the location.
+//     *
+//     * @public
+//     * @method
+//     */
+//    public ERROR(
+//       $__ERROR: Error | any,
+//       $__MESSAGE: string,
+//       __DIR__: string | null = null
+//    ): void {
+//       console.error(
+//          `${__DIR__
+//             ? `[ ERROR : .${__DIR__}() ] : `
+//             : `[ ERROR ] : `
+//          }~ "${$__MESSAGE}" ~ : `,
+//          this.level ? $__ERROR.message : $__ERROR
+//       );
+//    }
+//
+//    /**
+//     * Log an error message and throw an Error if data is invalid.
+//     *
+//     * @param {*} $_DATA - Data to be checked.
+//     * @param {string} $__MESSAGE - Error message if data is invalid.
+//     * @param {string|null} __DIR__ - Optional parameter to specify the location.
+//     * @param {string|null} $_NAME - Optional name to include in the error message.
+//     *
+//     * @throws {Error} - Throws an error if data is invalid.
+//     *
+//     * @public
+//     * @method
+//     */
+//    public VTHROW(
+//       $_DATA: any,
+//       $__MESSAGE: string,
+//       __DIR__: string | null = null,
+//       $_NAME: string | null = null
+//    ): void {
+//       if (!$_DATA) {
+//          console.error(`${
+//             __DIR__
+//                ? `[ VTHROW ERROR : .${__DIR__}() ]`
+//                : `[ VTHROW ERROR ] : `
+//          } ${$__MESSAGE
+//             ? `~ '${$__MESSAGE}' ~ : `
+//             : ''
+//          } ${typeof $_DATA} --> : ${
+//             $_NAME
+//                ? `${$_NAME} : `
+//                : ``
+//          }`, $_DATA);
+//
+//          throw new Error(
+//             `${__DIR__
+//                ? `[ VTHROW ERROR: .${__DIR__}() ] : `
+//                : `[ VTHROW ERROR ] : `
+//             }${$__MESSAGE
+//                ? `~ '${$__MESSAGE}' ~ : `
+//                : ''
+//             }${typeof $_DATA} --> : ${
+//                $_NAME
+//                   ? `${$_NAME} : `
+//                   : ``
+//             }, $_DATA`
+//          );
+//
+//       } else if (this.level) {
+//          console.log(
+//             `${__DIR__
+//                ? `[ VTHROW PASS : .${__DIR__}() ] : `
+//                : "[ VTHROW PASS ] : "
+//             } ${$__MESSAGE
+//                ? `~ "${$__MESSAGE}" ~ `
+//                : ``
+//             }${typeof $_DATA} ->> : ${
+//                $_NAME
+//                   ? `${$_NAME} : `
+//                   : ''
+//             }`, $_DATA
+//          );
+//       } else {
+//          console.log(
+//             `${__DIR__
+//                ? `[ VTHROW PASS : .${__DIR__}() ] : `
+//                : "[ VTHROW PASS ] : "
+//             } ${$__MESSAGE
+//                ? `~ "${$__MESSAGE}" ~ `
+//                : ``
+//             }${typeof $_DATA} --> : ${
+//                $_NAME
+//                   ? `${$_NAME} : `
+//                   : ''
+//             }`, $_DATA
+//          );
+//       }
+//
+//    }
+//
+//    /**
+//     * Log a debug message.
+//     *
+//     * @param {*} $_DATA - Data to be logged.
+//     * @param {string|null} __DIR__ - Optional parameter to specify the location.
+//     * @param {string|null} $_NAME - Optional name to include in the log message.
+//     * @param {string|null} $__MESSAGE - Optional message to include in the log.
+//     *
+//     * @public
+//     * @method
+//     */
+//    public DEBUG(
+//       $_DATA: any,
+//       $__MESSAGE: string | null = null,
+//       __DIR__: string | null = null,
+//       $_NAME: string | null = null,
+//    ) {
+//       if (this.level) {
+//          console.log(
+//             `${__DIR__
+//                ? `[ DEBUG : .${__DIR__}() ] : `
+//                : `[ DEBUG ] : `
+//             }${$__MESSAGE
+//                ? `~ : "${$__MESSAGE}" ~ : `
+//                : ''
+//             }${typeof $_DATA} --> ${
+//                $_NAME
+//                   ? `${$_NAME} : `
+//                   : ''
+//             } `, $_DATA
+//          );
+//       }
+//
+//    }
+//
+// }
 
-   /** @type {boolean}*/
-   level: boolean = true;
+class VLogger {
 
-   /**
-    * @constructor VLogger
-    *
-    * @param {boolean} level - The logging level. Set to true to enable logging, false to disable.
-    */
-   constructor(level: boolean = true) {
-      this.level = level;
+   private readonly $name: string
+   private readonly $debug: boolean
+
+   constructor($debug: boolean, $name: string) {
+      this.$name = $name;
+      this.$debug = true;
    }
 
-   /**
-    * Log an informational message.
-    *
-    * @param {*} $_DATA - Data to be logged.
-    * @param {string} $__MESSAGE - Informational message to be logged.
-    * @param {string|null} __DIR__ - Optional parameter to specify the location.
-    *
-    * @public
-    * @method
-    */
-   public INFO(
-      $_DATA: any,
-      $__MESSAGE: string,
-      __DIR__: string | null = null
-   ): void {
-      if (this.level) {
-         console.log(`${
-            __DIR__
-               ? `[ INFO : .${__DIR__}() ] : `
-               : "[ INFO ] : "
-         }~ "${$__MESSAGE}" ~ : ${typeof $_DATA} --> `, $_DATA);
-      }
+   info = (
+      className: string,
+      data: any,
+      msg: string,
+      func: string
+   ): void => {
+      console.log(`${this.$name}[INFO]${className}.${func}(): "${msg}"`, data);
    }
 
-   /**
-    * Log an error message and throw an Error.
-    *
-    * @param {Error} $__ERROR - The error object to throw.
-    * @param {string} $__MESSAGE - The error message to log.
-    * @param {string|null} __DIR__ - Optional parameter to specify the location.
-    *
-    * @throws {Error} - Always throws the provided error.
-    *
-    * @public
-    * @method
-    */
-   public THROW(
-      $__ERROR: Error | any,
-      $__MESSAGE: string,
-      __DIR__: string | null = null
-   ): void {
-      console.error(
-         `${__DIR__
-            ? `[ ERROR : .${__DIR__}() ] : `
-            : "[ ERROR ] : "
-         }~ "${$__MESSAGE}" ~ : `,
-         this.level ? $__ERROR.message : $__ERROR
-      );
-      throw $__ERROR;
+   debug = (
+      className: string,
+      data: any,
+      msg: string,
+      func: string
+   ): void => {
+      console.log(`${this.$name}[DEBUG]${className}.${func}(): "${msg}"`, data);
    }
 
-   /**
-    * Log an error message.
-    *
-    * @param {Error} $__ERROR - The error object to log.
-    * @param {string} $__MESSAGE - The error message to log.
-    * @param {string|null} __DIR__ - Optional parameter to specify the location.
-    *
-    * @public
-    * @method
-    */
-   public ERROR(
-      $__ERROR: Error | any,
-      $__MESSAGE: string,
-      __DIR__: string | null = null
-   ): void {
-      console.error(
-         `${__DIR__
-            ? `[ ERROR : .${__DIR__}() ] : `
-            : `[ ERROR ] : `
-         }~ "${$__MESSAGE}" ~ : `,
-         this.level ? $__ERROR.message : $__ERROR
-      );
+   warn = (
+      className: string,
+      data: any,
+      msg: string,
+      func: string
+   ): void => {
+      console.log(`${this.$name}[WARN]${className}.${func}(): "${msg}"`, data);
    }
 
-   /**
-    * Log an error message and throw an Error if data is invalid.
-    *
-    * @param {*} $_DATA - Data to be checked.
-    * @param {string} $__MESSAGE - Error message if data is invalid.
-    * @param {string|null} __DIR__ - Optional parameter to specify the location.
-    * @param {string|null} $_NAME - Optional name to include in the error message.
-    *
-    * @throws {Error} - Throws an error if data is invalid.
-    *
-    * @public
-    * @method
-    */
-   public VTHROW(
-      $_DATA: any,
-      $__MESSAGE: string,
-      __DIR__: string | null = null,
-      $_NAME: string | null = null
-   ): void {
-      if (!$_DATA) {
-         console.error(`${
-            __DIR__
-               ? `[ VTHROW ERROR : .${__DIR__}() ]`
-               : `[ VTHROW ERROR ] : `
-         } ${$__MESSAGE
-            ? `~ '${$__MESSAGE}' ~ : `
-            : ''
-         } ${typeof $_DATA} --> : ${
-            $_NAME
-               ? `${$_NAME} : `
-               : ``
-         }`, $_DATA);
-
-         throw new Error(
-            `${__DIR__
-               ? `[ VTHROW ERROR: .${__DIR__}() ] : `
-               : `[ VTHROW ERROR ] : `
-            }${$__MESSAGE
-               ? `~ '${$__MESSAGE}' ~ : `
-               : ''
-            }${typeof $_DATA} --> : ${
-               $_NAME
-                  ? `${$_NAME} : `
-                  : ``
-            }, $_DATA`
-         );
-
-      } else if (this.level) {
-         console.log(
-            `${__DIR__
-               ? `[ VTHROW PASS : .${__DIR__}() ] : `
-               : "[ VTHROW PASS ] : "
-            } ${$__MESSAGE
-               ? `~ "${$__MESSAGE}" ~ `
-               : ``
-            }${typeof $_DATA} ->> : ${
-               $_NAME
-                  ? `${$_NAME} : `
-                  : ''
-            }`, $_DATA
-         );
-      } else {
-         console.log(
-            `${__DIR__
-               ? `[ VTHROW PASS : .${__DIR__}() ] : `
-               : "[ VTHROW PASS ] : "
-            } ${$__MESSAGE
-               ? `~ "${$__MESSAGE}" ~ `
-               : ``
-            }${typeof $_DATA} --> : ${
-               $_NAME
-                  ? `${$_NAME} : `
-                  : ''
-            }`, $_DATA
-         );
-      }
-
+   error = (
+      className: string,
+      error: any,
+      msg: string,
+      func: string
+   ): void => {
+      console.log(`${this.$name}[ERROR]${className}.${func}(): "${msg}": `, error);
    }
 
-   /**
-    * Log a debug message.
-    *
-    * @param {*} $_DATA - Data to be logged.
-    * @param {string|null} __DIR__ - Optional parameter to specify the location.
-    * @param {string|null} $_NAME - Optional name to include in the log message.
-    * @param {string|null} $__MESSAGE - Optional message to include in the log.
-    *
-    * @public
-    * @method
-    */
-   public DEBUG(
-      $_DATA: any,
-      $__MESSAGE: string | null = null,
-      __DIR__: string | null = null,
-      $_NAME: string | null = null,
-   ) {
-      if (this.level) {
-         console.log(
-            `${__DIR__
-               ? `[ DEBUG : .${__DIR__}() ] : `
-               : `[ DEBUG ] : `
-            }${$__MESSAGE
-               ? `~ : "${$__MESSAGE}" ~ : `
-               : ''
-            }${typeof $_DATA} --> ${
-               $_NAME
-                  ? `${$_NAME} : `
-                  : ''
-            } `, $_DATA
-         );
-      }
-
+   public static getInstance($debug: boolean = true, $name: string = '[VLOG]'): VLogger {
+      return new VLogger($debug, $name);
    }
+
+   getVlog = (className: string = ''): { info: Function, debug: Function, warn: Function, error: Function } => ({
+      info: ({data, msg = '', func = ''}) => vlogger.info(className, data, msg, func),
+      debug: ({data, msg = '', func = ''}) => vlogger.debug(className, data, msg, func),
+      warn: ({data, msg = '', func = ''}) => vlogger.warn(className, data, msg, func),
+      error: ({error, msg = '', func = ''}) => vlogger.error(className, error, msg, func),
+   });
+
 
 }
+
+const vlogger = new VLogger.getInstance();
+
+const vlog = vlogger.getVlog('word')
+
+vlog.error('asd')
+
 
 /**
  * A simple validation utility class for checking various types and conditions.
@@ -325,6 +391,7 @@ export class Validot {
       if (typeof $VAR !== $TYPE.toLowerCase()) {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be of type '${$TYPE}'. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be of type '${$TYPE}'. Received: ` + $VAR);
       }
    }
@@ -354,6 +421,7 @@ export class Validot {
       if ($VAR !== $COMPARE) {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be equal to '${$COMPARE}'. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be equal to '${$COMPARE}'. Received: ` + $VAR);
       }
    }
@@ -381,6 +449,7 @@ export class Validot {
       if (typeof $VAR !== 'string') {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be a string. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be a string. Received: ` + $VAR);
       }
    }
@@ -408,6 +477,7 @@ export class Validot {
       if (typeof $VAR !== 'number') {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be a number. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be a number. Received: ` + $VAR);
       }
    }
@@ -435,6 +505,7 @@ export class Validot {
       if (!/^[0-9a-fA-F]{24}$/.test($VAR)) {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be a valid ObjectId. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be a valid ObjectId. Received: ` + $VAR);
       }
    }
@@ -462,6 +533,7 @@ export class Validot {
       if ($VAR === null) {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' cannot be null. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' cannot be null. Received: ` + $VAR);
       }
    }
@@ -489,6 +561,7 @@ export class Validot {
       if (!Array.isArray($VAR)) {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be an array. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be an array. Received: ` + $VAR);
       }
    }
@@ -516,8 +589,10 @@ export class Validot {
       if (typeof $VAR !== 'object' || $VAR === null || Array.isArray($VAR)) {
          if (this.level) console.log(this.prefix + ($_DIR_ ? `.${$_DIR_}() : ` : '')
             + `Value '${$_NAME || 'UNKNOWN'}' must be an object. Received: ` + $VAR);
+
          throw new Error(($_DIR_ ? `.${$_DIR_}() : ` : '') + `Value '${$_NAME || 'UNKNOWN'}' must be an object. Received: ` + $VAR);
       }
    }
-
 }
+
+
