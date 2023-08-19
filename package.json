@@ -1,6 +1,6 @@
 {
   "name": "@instamenta/vlogger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "logger with validation and throwing functionality",
   "types": "./lib/cjs/types/index.d.ts",
   "main": "./lib/cjs/index.js",

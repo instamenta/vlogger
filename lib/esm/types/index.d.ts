@@ -1,88 +1,72 @@
 /** @file Used for console Logging, Throwing errors & Validation. */
 /**
  * Vlogger class Used for console Logging, Throwing errors & Validation
- * - level - give if you want to use INFO and DEBUG + verbose errors returned from VThrow, Throw and Error
+ * * level - give if you want to use INFO and DEBUG + verbose errors returned from VThrow, Throw and Error
  *
  * @class VLogger
- *
- * @property {boolean} level - The logging level. Set to true to enable logging, false to disable.
- *
- * @property {function} INFO - Log an informational message.
- * @property {function} THROW - Log an error message and throw an Error.
- * @property {function} ERROR - Log an error message.
- * @property {function} VTHROW - Log an error message and throw an Error if data is invalid.
- * @property {function} DEBUG - Log a debug message.
  */
-export default class VLogger {
-    /** @type {boolean}*/
-    level: boolean;
+export declare class VLogger {
     /**
-     * @constructor VLogger
-     *
-     * @param {boolean} level - The logging level. Set to true to enable logging, false to disable.
+     * @type {boolean}
+     * @private
+     * @readonly
      */
-    constructor(level?: boolean);
+    private readonly $name;
     /**
-     * Log an informational message.
-     *
-     * @param {*} $_DATA - Data to be logged.
-     * @param {string} $__MESSAGE - Informational message to be logged.
-     * @param {string|null} __DIR__ - Optional parameter to specify the location.
-     *
-     * @public
-     * @method
+     * @type {boolean}
+     * @private
+     * @readonly
      */
-    INFO($_DATA: any, $__MESSAGE: string, __DIR__?: string | null): void;
+    private readonly $debug;
     /**
-     * Log an error message and throw an Error.
-     *
-     * @param {Error} $__ERROR - The error object to throw.
-     * @param {string} $__MESSAGE - The error message to log.
-     * @param {string|null} __DIR__ - Optional parameter to specify the location.
-     *
-     * @throws {Error} - Always throws the provided error.
-     *
-     * @public
-     * @method
+     * @param {any} $debug
+     * @param {string} $name
      */
-    THROW($__ERROR: Error | any, $__MESSAGE: string, __DIR__?: string | null): void;
+    constructor($debug: boolean, $name: string);
     /**
-     * Log an error message.
-     *
-     * @param {Error} $__ERROR - The error object to log.
-     * @param {string} $__MESSAGE - The error message to log.
-     * @param {string|null} __DIR__ - Optional parameter to specify the location.
-     *
-     * @public
-     * @method
+     * @param {string} className
+     * @param {any} data
+     * @param {string} msg
+     * @param {string} func
      */
-    ERROR($__ERROR: Error | any, $__MESSAGE: string, __DIR__?: string | null): void;
+    info: (className: string, data: any, msg: string, func: string) => void;
     /**
-     * Log an error message and throw an Error if data is invalid.
-     *
-     * @param {*} $_DATA - Data to be checked.
-     * @param {string} $__MESSAGE - Error message if data is invalid.
-     * @param {string|null} __DIR__ - Optional parameter to specify the location.
-     * @param {string|null} $_NAME - Optional name to include in the error message.
-     *
-     * @throws {Error} - Throws an error if data is invalid.
-     *
-     * @public
-     * @method
+     * @param {string} className
+     * @param {any} data
+     * @param {string} msg
+     * @param {string} func
      */
-    VTHROW($_DATA: any, $__MESSAGE: string, __DIR__?: string | null, $_NAME?: string | null): void;
+    debug: (className: string, data: any, msg: string, func: string) => void;
     /**
-     * Log a debug message.
-     *
-     * @param {*} $_DATA - Data to be logged.
-     * @param {string|null} __DIR__ - Optional parameter to specify the location.
-     * @param {string|null} $_NAME - Optional name to include in the log message.
-     * @param {string|null} $__MESSAGE - Optional message to include in the log.
-     *
-     * @public
-     * @method
+     * @param {string} className
+     * @param {any} data
+     * @param {string} msg
+     * @param {string} func
      */
-    DEBUG($_DATA: any, $__MESSAGE?: string | null, __DIR__?: string | null, $_NAME?: string | null): void;
+    warn: (className: string, data: any, msg: string, func: string) => void;
+    /**
+     * @param {string} className
+     * @param {any} error
+     * @param {string} msg
+     * @param {string} func
+     */
+    error: (className: string, error: any, msg: string, func: string) => void;
+    /**
+     * @param {boolean} $debug
+     * @param {string} $name
+     *
+     * @returns {VLogger}
+     */
+    static getInstance($debug?: boolean, $name?: string): VLogger;
+    /**
+     * @param {string} className
+     */
+    getVlog: (className?: string) => {
+        info: Function;
+        debug: Function;
+        warn: Function;
+        error: Function;
+    };
 }
 /**
  * A simple validation utility class for checking various types and conditions.
