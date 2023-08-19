@@ -61,12 +61,29 @@ export declare class VLogger {
     /**
      * @param {string} className
      */
-    getVlog: (className?: string) => {
-        info: Function;
-        debug: Function;
-        warn: Function;
-        error: Function;
-    };
+    getVlog: (className?: string) => IVlog;
+}
+export interface IVlog {
+    info: (params: {
+        data: any;
+        msg: string;
+        func?: string;
+    }) => void;
+    debug: (params: {
+        data?: any;
+        msg?: string;
+        func?: string;
+    }) => void;
+    warn: (params: {
+        data: any;
+        msg?: string;
+        func?: string;
+    }) => void;
+    error: (params: {
+        e: any;
+        msg?: string;
+        func?: string;
+    }) => void;
 }
 /**
  * A simple validation utility class for checking various types and conditions.

@@ -80,7 +80,7 @@ export class VLogger {
    /**
     * @param {string} className
     */
-   getVlog = (className: string = ''): IVlog=> ({
+   getVlog = (className: string = ''): IVlog => ({
 
       /**
        * @param {Object} o
@@ -90,8 +90,8 @@ export class VLogger {
        */
       info: ({data, msg = '', func = ''}: {
          data: any,
-         msg: string,
-         func: string
+         msg?: string | undefined,
+         func?: string | undefined
       }) => this.info(className, data, msg, func),
 
       /**
@@ -100,10 +100,10 @@ export class VLogger {
        * @param {string} o.msg
        * @param {string} o.func
        */
-      debug: ({data, msg = '', func = ''}: {
-         data: any,
-         msg: string,
-         func: string
+      debug: ({data = {}, msg = '', func = ''}: {
+         data?: any,
+         msg?: string | undefined,
+         func?: string | undefined
       }) => this.debug(className, data, msg, func),
 
       /**
@@ -114,8 +114,8 @@ export class VLogger {
        */
       warn: ({data, msg = '', func = ''}: {
          data: any,
-         msg: string,
-         func: string
+         msg?: string | undefined,
+         func?: string | undefined
       }) => this.warn(className, data, msg, func),
 
       /**
@@ -126,17 +126,17 @@ export class VLogger {
        */
       error: ({e, msg = '', func = ''}: {
          e: any,
-         msg: string,
-         func: string
+         msg?: string | undefined,
+         func?: string | undefined
       }) => this.error(className, e, msg, func),
    });
 }
 
 export interface IVlog {
-   info: (params: { data: any, msg: string, func: string }) => void,
-   debug: (params: { data: any, msg: string, func: string }) => void,
-   warn: (params: { data: any, msg: string, func: string }) => void,
-   error: (params: { e: any, msg: string, func: string }) => void,
+   info: (params: { data: any, msg: string, func?: string }) => void,
+   debug: (params: { data?: any, msg?: string, func?: string }) => void,
+   warn: (params: { data: any, msg?: string, func?: string }) => void,
+   error: (params: { e: any, msg?: string, func?: string }) => void,
 }
 
 /**
