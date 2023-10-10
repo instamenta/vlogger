@@ -1,78 +1,163 @@
-export class VLogger {
+const { color, log,yellow, red, green, cyan, cyanBright, orange, magenta , bold} = require('console-log-colors');
 
-   private readonly $name: string
-   private readonly $debug: boolean
 
-   constructor($debug: boolean, $name: string) {
-      this.$name = $name;
-      this.$debug = true;
-   }
+/**
+ * * VLogger class for logging messages.
+ * @class VLogger
+ */
+export default class VLogger {
+    readonly #name: string
+    readonly #debug: boolean
+    #func: string = ''
+    #logInfo: boolean = false
 
-   public static getInstance($debug: boolean = true, $name: string = ''): VLogger {
-      return new VLogger($debug, $name);
-   }
+    /**
+     * Creates an instance of VLogger.
+     * @param _debug - Enable or disable debugging.
+     * @param _name - The name to display in log messages.
+     */
+    constructor(_debug: boolean, _name: string) {
+        this.#name = '[ ' + _name + ' ] ';
+        this.#debug = _debug;
+    }
 
-   info(className: string, data: any, msg: string, func: string): void {
-      console.log(`${this.$name}[INFO] ${className}.${func}(): "${msg}"`, data);
-   }
+    #getName(): any {
+       return bold(cyanBright(this.#name))
+    }
 
-   debug(className: string, data: any, msg: string, func: string): void {
-      console.log(`${this.$name}[DEBUG] ${className}.${func}(): "${msg}"`, data);
-   }
+    /**
+     * Get a new instance of VLogger.
+     * @param options - Options for creating the logger.
+     * @param options.debug - Enable or disable debugging.
+     * @param options.name - The name to display in log messages.
+     * @returns A new instance of VLogger.
+     */
+    public static getInstance({debug = true, name = 'VLogger'}: { debug: boolean, name: string } = {debug: true, name: 'VLogger'} ): VLogger {
+        return new VLogger(debug, name);
+    }
 
-   warn(className: string, data: any, msg: string, func: string): void {
-      console.log(`${this.$name}[WARN] ${className}.${func}(): "${msg}"`, data);
-   }
+    /**
+     * Log an informational message.
+     *
+     * @param _class - The class name.
+     * @param data - Data to log.
+     * @param _message - The log message.
+     * @param _function - The function name.
+     */
+    info(_class: string = '', data: any = '', _message: string = '', _function: string = ''): void {
+        console.log(`${this.#getName()}${bold(green('[INFO]'))}${this.#time()} ${_class}.${bold(magenta(_function + '()'))}: "${_message}": `, data);
+    }
 
-   error(className: string, error: any, msg: string, func: string): void {
-      console.log(`${this.$name}[ERROR] ${className}.${func}(): "${msg}": `, error);
-   }
+    /**
+     * Log a debug message.
+     * @param _class - The class name.
+     * @param data - Data to log.
+     * @param _message - The log message.
+     * @param _function - The function name.
+     */
+    debug(_class: string = '', data: any = '', _message: string = '', _function: string = ''): void {
+        console.log(`${this.#getName()}${bold(green('[DEBUG]'))}${this.#time()} ${_class}.${bold(magenta(_function+ '()'))}: "${_message}"`, data);
+    }
 
-   getVlog(className: string = ''): IVlog {
-      return {
-         info: ({data, msg = '', func = ''}: IVInfo) => {
-            this.info(className, data, msg, func);
-         },
-         debug: ({data = {}, msg = '', func = ''}: IVDebug) => {
-            this.debug(className, data, msg, func);
-         },
-         warn: ({data, msg = '', func = ''}: IVWarn) => {
-            this.warn(className, data, msg, func);
-         },
-         error: ({e, msg = '', func = ''}: IVError) => {
-            this.error(className, e, msg, func);
-         }
-      }
-   };
+    /**
+     * Log a warning message.
+     * @param _class - The class name.
+     * @param data - Data to log.
+     * @param _message - The log message.
+     * @param _function - The function name.
+     */
+    warn(_class: string = '', data: any = '', _message: string = '', _function: string = ''): void {
+        console.log(`${this.#getName()}${bold(red('[WARN]'))}${this.#time()} ${_class}.${bold(magenta(_function + '()'))}: "${_message}"`, data);
+    }
+
+    /**
+     * Log an error message.
+     * @param _class - The class name.
+     * @param _error - The error object.
+     * @param _message - The log message.
+     * @param _function - The function name.
+     */
+    error(_class: string = '', _error: any = '', _message: string = '', _function: string = ''): void {
+        console.log(`${this.#getName()}${bold(red('[INFO]'))}${this.#time()} ${_class}.${bold(magenta(_function + '()'))}: "${_message}": `, _error);
+    }
+
+    /**
+     * Get a logger instance.
+     * @param {string} _class - The class name.
+     * @returns {IVlog} A logger instance.
+     */
+    getVlogger(_class: string = ''): IVlog {
+        _class = bold(_class);
+        return {
+            info: ({d, m = '', f = ''}: IVInfo) => {
+                if (!this.#debug) return
+                (f === '') ? f = this.#func : this.#func = f;
+                this.info(_class, d, m, f);
+            },
+            debug: ({d = {}, m = '', f = ''}: IVDebug) => {
+                if (!this.#debug) return
+                (f === '') ? f = this.#func : this.#func = f;
+                this.debug(_class, d, m, f);
+            },
+            warn: ({d, m = '', f = ''}: IVWarn) => {
+                (f === '') ? f = this.#func : this.#func = f;
+                this.warn(_class, d, m, f);
+            },
+            error: ({e, m = '', f = ''}: IVError ) => {
+                (f === '') ? f = this.#func : this.#func = f;
+                this.error(_class, e, m, f);
+            },
+            /**
+             * Private method to return the current time.
+             * @returns The formatted time string.
+             * @private
+             */
+            log: (_function: string, logInfo: boolean = false) => {
+                this.#func = _function;
+                if (logInfo && this.#debug) {
+                    this.#logInfo = true;
+                    console.log(`${this.#getName()}${bold(green('[CALL]'))}${this.#time()} ${_class}.${bold(magenta(_function+ '()'))}}`)
+                }
+            }
+        }
+    };
+
+    #time(): string {
+        const now = new Date();
+        return bold(yellow(` [ ⏰  ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ⚡ ]`));
+    }
 }
 
+
+
 export interface IVlog {
-   info: (params: { data: any, msg: string, func?: string }) => void,
-   debug: (params: { data?: any, msg?: string, func?: string }) => void,
-   warn: (params: { data: any, msg?: string, func?: string }) => void,
-   error: (params: { e: any, msg?: string, func?: string }) => void,
+    info: (params: { d?: any, m?: string, f?: string }) => void,
+    debug: (params: { d?: any, m?: string, f?: string }) => void,
+    warn: (params: { d?: any, m?: string, f?: string }) => void,
+    error: (params: { e: any, m?: string, f?: string }) => void,
+    log: (_function: string, logInfo?: boolean) => void;
 }
 
 interface IVInfo {
-   data: any,
-   msg?: string | undefined,
-   func?: string | undefined
+    d?: any,
+    m?: string,
+    f?: string
 }
 
 interface IVDebug {
-   data?: any,
-   msg?: string | undefined,
-   func?: string | undefined
+    d?: any,
+    m?: string,
+    f?: string
 }
 
 interface IVWarn {
-   data: any,
-   msg?: string | undefined,
-   func?: string | undefined
+    d?: any,
+    m?: string,
+    f?: string
 }
 
 interface IVError {
-   e: any,
-   msg?: string | undefined,
-   func?: string | undefined
+    e: any;
+    m?: string;
+    f?: string;
 }
