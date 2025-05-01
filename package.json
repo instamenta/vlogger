@@ -27,10 +27,10 @@
     "lib/**/*"
   ],
   "devDependencies": {
-    "@types/node": "^20.8.4",
+    "@types/node": "^22.15.3",
     "i": "^0.3.7",
-    "npm": "^10.2.0",
-    "typescript": "^5.1.6"
+    "npm": "^11.3.0",
+    "typescript": "^5.8.3"
   },
   "keywords": [
     "logger",
@@ -42,6 +42,6 @@
   "author": "instamenta",
   "license": "MIT",
   "dependencies": {
-    "console-log-colors": "^0.4.0"
+    "console-log-colors": "^0.5.0"
   }
 }

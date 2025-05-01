@@ -1,163 +1,126 @@
-const { color, log,yellow, red, green, cyan, cyanBright, orange, magenta , bold} = require('console-log-colors');
+import {color} from 'console-log-colors';
 
+export class VLogger {
+  private readonly loggerName: string;
+  private debugMode: boolean;
+  private lastFunctionName: string = '';
 
-/**
- * * VLogger class for logging messages.
- * @class VLogger
- */
-export default class VLogger {
-    readonly #name: string
-    readonly #debug: boolean
-    #func: string = ''
-    #logInfo: boolean = false
+  public constructor(debugMode?: boolean, loggerName?: string) {
+    this.debugMode = debugMode ?? process.env.LOG_LEVEL === 'true' ?? !!process.env.LOG_LEVEL ?? true;
+    this.loggerName = loggerName ?? process.env.LOGGER_NAME ?? 'VLogger';
+  }
 
-    /**
-     * Creates an instance of VLogger.
-     * @param _debug - Enable or disable debugging.
-     * @param _name - The name to display in log messages.
-     */
-    constructor(_debug: boolean, _name: string) {
-        this.#name = '[ ' + _name + ' ] ';
-        this.#debug = _debug;
+  private get time(): string {
+    const time: Date = new Date();
+    return color.bold(color.yellow(` [ ⏰  ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} ⚡ ]`));
+  }
+
+  private handleFunction(functionName?: string | Function): string {
+    if (typeof functionName === 'function') {
+      this.lastFunctionName = functionName.name;
+    } else if (typeof functionName === 'string' && functionName.length > 0) {
+      this.lastFunctionName = functionName;
     }
 
-    #getName(): any {
-       return bold(cyanBright(this.#name))
-    }
+    return this.lastFunctionName;
+  }
 
-    /**
-     * Get a new instance of VLogger.
-     * @param options - Options for creating the logger.
-     * @param options.debug - Enable or disable debugging.
-     * @param options.name - The name to display in log messages.
-     * @returns A new instance of VLogger.
-     */
-    public static getInstance({debug = true, name = 'VLogger'}: { debug: boolean, name: string } = {debug: true, name: 'VLogger'} ): VLogger {
-        return new VLogger(debug, name);
-    }
+  private get printName(): string { return color.cyan(`[ ${this.loggerName} ]`) }
+  private get printFunction(): string { return color.bold(color.magenta(`${this.lastFunctionName}()`)) };
 
-    /**
-     * Log an informational message.
-     *
-     * @param _class - The class name.
-     * @param data - Data to log.
-     * @param _message - The log message.
-     * @param _function - The function name.
-     */
-    info(_class: string = '', data: any = '', _message: string = '', _function: string = ''): void {
-        console.log(`${this.#getName()}${bold(green('[INFO]'))}${this.#time()} ${_class}.${bold(magenta(_function + '()'))}: "${_message}": `, data);
-    }
+  private printMessage(message: string) {
+    return (typeof message === 'string' && message.length > 0)
+      ? `"${message}":`
+      : typeof message === 'string' ? '' : `"${message}":`;
+  }
 
-    /**
-     * Log a debug message.
-     * @param _class - The class name.
-     * @param data - Data to log.
-     * @param _message - The log message.
-     * @param _function - The function name.
-     */
-    debug(_class: string = '', data: any = '', _message: string = '', _function: string = ''): void {
-        console.log(`${this.#getName()}${bold(green('[DEBUG]'))}${this.#time()} ${_class}.${bold(magenta(_function+ '()'))}: "${_message}"`, data);
-    }
+  private get printInfo(): string { return color.bold(color.green('[INFO]')); }
+  private get printDebug(): string { return color.bold(color.green('[DEBUG]')); }
+  private get printWarn(): string { return color.bold(color.red('[WARN]')); }
+  private get printError(): string { return color.bold(color.red('[ERROR]')); }
+  private get printCall(): string { return color.bold(color.green('[CALL]')); }
 
-    /**
-     * Log a warning message.
-     * @param _class - The class name.
-     * @param data - Data to log.
-     * @param _message - The log message.
-     * @param _function - The function name.
-     */
-    warn(_class: string = '', data: any = '', _message: string = '', _function: string = ''): void {
-        console.log(`${this.#getName()}${bold(red('[WARN]'))}${this.#time()} ${_class}.${bold(magenta(_function + '()'))}: "${_message}"`, data);
-    }
+  public get isDebugOn(): boolean { return this.debugMode; }
+  public get isDebugOff(): boolean { return !this.debugMode; }
 
-    /**
-     * Log an error message.
-     * @param _class - The class name.
-     * @param _error - The error object.
-     * @param _message - The log message.
-     * @param _function - The function name.
-     */
-    error(_class: string = '', _error: any = '', _message: string = '', _function: string = ''): void {
-        console.log(`${this.#getName()}${bold(red('[INFO]'))}${this.#time()} ${_class}.${bold(magenta(_function + '()'))}: "${_message}": `, _error);
-    }
+  private printBase(type: string): string { return `${this.printName}${type}${this.time}`}
 
-    /**
-     * Get a logger instance.
-     * @param {string} _class - The class name.
-     * @returns {IVlog} A logger instance.
-     */
-    getVlogger(_class: string = ''): IVlog {
-        _class = bold(_class);
-        return {
-            info: ({d, m = '', f = ''}: IVInfo) => {
-                if (!this.#debug) return
-                (f === '') ? f = this.#func : this.#func = f;
-                this.info(_class, d, m, f);
-            },
-            debug: ({d = {}, m = '', f = ''}: IVDebug) => {
-                if (!this.#debug) return
-                (f === '') ? f = this.#func : this.#func = f;
-                this.debug(_class, d, m, f);
-            },
-            warn: ({d, m = '', f = ''}: IVWarn) => {
-                (f === '') ? f = this.#func : this.#func = f;
-                this.warn(_class, d, m, f);
-            },
-            error: ({e, m = '', f = ''}: IVError ) => {
-                (f === '') ? f = this.#func : this.#func = f;
-                this.error(_class, e, m, f);
-            },
-            /**
-             * Private method to return the current time.
-             * @returns The formatted time string.
-             * @private
-             */
-            log: (_function: string, logInfo: boolean = false) => {
-                this.#func = _function;
-                if (logInfo && this.#debug) {
-                    this.#logInfo = true;
-                    console.log(`${this.#getName()}${bold(green('[CALL]'))}${this.#time()} ${_class}.${bold(magenta(_function+ '()'))}}`)
-                }
-            }
+  private printSource(className: string): string {
+    return this.printFunction?.length > 0 ? `${className}.${this.printFunction}` : `${className}`;
+  }
+
+  private printBody(className: string, type: string, message: string): string {
+    return `${this.printBase(type)} ${this.printSource(className)}: ${this.printMessage(message)}`
+  }
+
+  public info(className = '', additionalData: any = '', message: string = ''): void {
+    console.log(this.printBody(className, this.printInfo, message), additionalData);
+  }
+
+  public debug(className: string = '', additionalData: any = '', message: string = ''): void {
+    console.log(this.printBody(className, this.printDebug, message), additionalData);
+  }
+
+  public warn(className: string = '', additionalData: any = '', message: string = ''): void {
+    console.log(this.printBody(className, this.printWarn, message), additionalData);
+  }
+
+  public error(className: string = '', error: any = '', message: string = ''): void {
+    console.log(this.printBody(className, this.printError, message), error);
+  }
+
+  public call(className: string = ''): void {
+    console.log(`${this.printBase(this.printCall)} ${this.printSource(className)}`)
+  }
+
+  public getVlogger: (className: string) => IVlog = (className: string = ''): IVlog => {
+    const _className = color.bold(className ?? this?.constructor?.name);
+
+    return {
+
+      info: ({d = {}, m = '', f = ''}: IVInfo) => {
+        if (this.isDebugOff) return;
+        this.handleFunction(f);
+        this.info(_className, d, m);
+      },
+
+      debug: ({d = {}, m = '', f = ''}: IVDebug) => {
+        if (this.isDebugOff) return;
+        this.handleFunction(f);
+        this.debug(_className, d, m);
+      },
+
+      warn: ({d = {}, m = '', f = ''}: IVWarn) => {
+        this.handleFunction(f);
+        this.warn(_className, d, m);
+      },
+
+      error: ({e = {}, m = '', f = ''}: IVError ) => {
+        this.handleFunction(f);
+        this.error(_className, e, m);
+      },
+
+      log: (f: string | Function, debugMode: boolean = false) => {
+        this.handleFunction(f);
+        if (debugMode) {
+          this.debugMode = true;
+          this.call(_className);
         }
-    };
-
-    #time(): string {
-        const now = new Date();
-        return bold(yellow(` [ ⏰  ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ⚡ ]`));
+      }
     }
+  };
 }
 
-
+type IVInfo = { d?: any; m?: string; f?: string }
+type IVDebug = { d?: any; m?: string; f?: string }
+type IVWarn = { d?: any; m?: string; f?: string }
+type IVError = { e?: any; m?: string; f?: string }
 
 export interface IVlog {
-    info: (params: { d?: any, m?: string, f?: string }) => void,
-    debug: (params: { d?: any, m?: string, f?: string }) => void,
-    warn: (params: { d?: any, m?: string, f?: string }) => void,
-    error: (params: { e: any, m?: string, f?: string }) => void,
-    log: (_function: string, logInfo?: boolean) => void;
+  info: (params: IVInfo) => void,
+  debug: (params: IVDebug) => void,
+  warn: (params: IVWarn) => void,
+  error: (params: IVError) => void,
+  log: (_function: string | Function, logInfo?: boolean) => void;
 }
 
-interface IVInfo {
-    d?: any,
-    m?: string,
-    f?: string
-}
-
-interface IVDebug {
-    d?: any,
-    m?: string,
-    f?: string
-}
-
-interface IVWarn {
-    d?: any,
-    m?: string,
-    f?: string
-}
-
-interface IVError {
-    e: any;
-    m?: string;
-    f?: string;
-}
